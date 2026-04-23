@@ -37,10 +37,14 @@ class Paramiko:
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
 
         ssh_config = paramiko.SSHConfig()
-        ssh_config_file = configuration.ssh.config_file  # type: ignore
-        if os.path.exists(ssh_config_file):
-            with open(ssh_config_file) as f:
-                ssh_config.parse(f)
+        try:
+            ssh_config_file = configuration.ssh.config_file  # type: ignore
+            if os.path.exists(ssh_config_file):
+                with open(ssh_config_file) as f:
+                    ssh_config.parse(f)
+        except AttributeError:
+            pass
+        
         parameters: dict[str, Any] = {
             "hostname": hostname,
             "username": username,
